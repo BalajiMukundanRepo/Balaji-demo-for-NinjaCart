@@ -11,7 +11,7 @@ public class MenuText : MonoBehaviour
 
     void Start()
     {
-        Debug.Log($"Best Time: {GameInfo.BestTime}, Last Time: {GameInfo.LastTime}");
+        GameInfo.Load();
 
         if (GameInfo.BestTime != 0)
         {

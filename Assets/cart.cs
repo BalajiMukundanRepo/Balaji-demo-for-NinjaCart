@@ -10,13 +10,16 @@ public class cart : MonoBehaviour
     private Rigidbody rb;
     [Tooltip("minimum speed is 0")]
     public float maxSpeed = 10;
-    public float backwardSpeedMultiplyer = 0.5f;
+    public float backwardSpeedMultiplier = 0.5f;
+
+    private Player playerComponent;
     
     //minimum speed is 0
 
     void Start()    
     {
         rb = GetComponent<Rigidbody>();
+        playerComponent = GetComponent<Player>();
         speed = 0;
     }
 
@@ -50,9 +53,9 @@ public class cart : MonoBehaviour
             if (speed > maxSpeed)
             {
                 speed = maxSpeed;
-            } else if (speed < -maxSpeed * backwardSpeedMultiplyer)
+            } else if (speed < -maxSpeed * backwardSpeedMultiplier)
             {
-                speed = -maxSpeed * backwardSpeedMultiplyer;
+                speed = -maxSpeed * backwardSpeedMultiplier;
             }
             
         }
@@ -91,18 +94,12 @@ public class cart : MonoBehaviour
 
         // transform.Translate(Vector3.left * horizontal * speed * Time.deltaTime);
         transform.RotateAround(Vector3.up, horizontal * rotateSpeed * Time.deltaTime);
-        transform.Translate(speed * Time.deltaTime * Vector3.back);
-        rb.AddForce(speed * Time.deltaTime * vertical * Vector3.back);
+        rb.MovePosition(transform.position + transform.TransformDirection(Vector3.back) * speed * Time.deltaTime);
         if (cartObj)
         {
-            Vector3 forward = transform.TransformDirection(Vector3.back);
-            Vector3 toCart = cartObj.position - transform.position;
-            //Debug.Log(Vector3.Dot(forward, toCart));
             if (Vector3.Dot(Vector3.up, transform.up) < 0)
             {
-                Debug.Log("flipped");
-                //cartObj.rotation = Quaternion.Euler(0, 0, 0);
-                GetComponent<Player>().resetToCheckpoint();
+                playerComponent.resetToCheckpoint();
             }
                 
         }

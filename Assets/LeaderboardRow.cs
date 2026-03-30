@@ -15,13 +15,7 @@ public class LeaderboardRow : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Initate(string player, string place)
+    public void Initiate(string player, string place)
     {
         playerText.text = player;
         placeText.text = place;
