@@ -17,10 +17,8 @@ public class cameraFollow : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.DrawRay(transform.position, (LookTarget.position - transform.position).normalized * Time.deltaTime * speed, Color.red);
-        //transform.position += (MoveTarget.position - transform.position).normalized * Time.deltaTime * speed;
         transform.position = Vector3.Lerp(transform.position, MoveTarget.position, LeftoverFireStable);
-        //transform.Translate((FollowTarget.position - transform.position).normalized * Time.deltaTime * speed);
-        transform.rotation = Quaternion.LookRotation(LookTarget.position - transform.position, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(LookTarget.position - transform.position, Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LeftoverFireStable);
     }
 }

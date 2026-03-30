@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,11 +16,17 @@ public class Player : MonoBehaviour
     public string SceneToLoad;
     public Transform LastCheckPoint;
     public float StartTime;
-    // Start is called before the first frame update
+
+    private cart cartComponent;
+    private Rigidbody rb;
+    private float nextTimerUpdate;
+
     void Start()
     {
+        cartComponent = GetComponent<cart>();
+        rb = GetComponent<Rigidbody>();
+        if (LastCheckPoint == null) LastCheckPoint = transform;
         lapText.text = "LAPS: " + currentLap + "/3";
-        
     }
 
     
@@ -33,14 +39,16 @@ public class Player : MonoBehaviour
         }
         else
         {
-            TimerText.text = "Time: " + (Time.time - StartTime);
+            if (Time.time >= nextTimerUpdate)
+            {
+                nextTimerUpdate = Time.time + 0.1f;
+                TimerText.text = "Time: " + (Time.time - StartTime).ToString("F1");
+            }
         }
     }
 
     public void checkPointActivated(Checkpoint checkpoint)
     {
-
-        Debug.Log($"{transform.name} activated checkpoint {checkpoint.transform.name}, index {checkpoint.index} vs current: {currentCheckpoint}");
         if (checkpoint.index == currentCheckpoint)
         {
             LastCheckPoint = checkpoint.transform;
@@ -51,7 +59,6 @@ public class Player : MonoBehaviour
                     StartTime = Time.time;
                 }
                 currentLap++;
-                Debug.Log("FINISHED");
                 if (currentLap == 3)
                 {
                     // logic for end game & scoring.
@@ -80,10 +87,9 @@ public class Player : MonoBehaviour
     {
         transform.position = LastCheckPoint.position;
         transform.rotation = LastCheckPoint.rotation;
-        GetComponent<cart>().resetSpeed();
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
+        cartComponent.resetSpeed();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
 
@@ -101,10 +107,12 @@ public class Player : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     [ContextMenu("warp to last checkpoint")]
     void debugFinishRace()
     {
         currentLap = 3;
         currentCheckpoint = 3;
     }
+#endif
 }
