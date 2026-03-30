@@ -10,6 +10,7 @@ public class cart : MonoBehaviour
     private Rigidbody rb;
     [Tooltip("minimum speed is 0")]
     public float maxSpeed = 10;
+    [UnityEngine.Serialization.FormerlySerializedAs("backwardSpeedMultiplyer")]
     public float backwardSpeedMultiplier = 0.5f;
 
     private Player playerComponent;
